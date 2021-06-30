@@ -8,12 +8,21 @@ filter_enum = {}
 
 
 def dict_factory(cursor, row):
+    """
+    Pattern function for row factory of database.
+
+    :param cursor: sqlite cursor object;
+    :param row: database row;
+
+    :return: map where key - table name and value - value of row in table.
+    """
     d = {}
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
 
 
+# Route functions:
 @app.errorhandler(404)
 def page_not_found(e):
     return "<h1>404</h1><p>The resource could not be found.</p>", 404
@@ -35,6 +44,7 @@ def api_all(table):
 def api_filter(table):
     api = API('chinook.db', dict_factory)
     return api.get_with_filter(table, page_not_found(404), filter_enum)
+# End of route functions
 
 
 if __name__ == "__main__":
